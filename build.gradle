@@ -1,0 +1,59 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.7'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+project.sourceSets {
+	testInteg {
+		compileClasspath+= project.sourceSets.main.output
+		runtimeClasspath+= project.sourceSets.main.output
+	}
+}
+
+project.configurations {
+	testIntegImplementation.extendsFrom implementation
+	testIntegImplementation.extendsFrom runtimeOnly
+	testIntegImplementation.extendsFrom testImplementation
+}
+
+project.test{
+
+}
+
+project.task("testInteg", type: Test)
+		{
+			group = 'verification'
+			testClassesDirs = project.sourceSets.testInteg.output.classesDirs
+			classpath=project.sourceSets.testInteg.runtimeClasspath
+			shouldRunAfter project.tasks['test']
+		}
+
+
+project.tasks['check'].dependsOn project.tasks['testInteg']
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	testImplementation 'io.cucumber:cucumber-java:6.8.0'
+	testImplementation 'io.cucumber:cucumber-junit:6.8.0'
+	testImplementation 'io.cucumber:cucumber-spring:6.8.0'
+
+}
+
+
+
+
+
+
+
